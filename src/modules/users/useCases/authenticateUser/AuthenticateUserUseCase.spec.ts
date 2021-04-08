@@ -12,7 +12,7 @@ let authenticateUserUseCase: AuthenticateUserUseCase;
 let userRepositoryInMemory: InMemoryUsersRepository;
 let createUserUseCase: CreateUserUseCase;
 
-describe("Authenticate User", () => {
+describe("Authenticate User Use Case", () => {
   interface ITokenUser {
     user: User,
     token: string,
