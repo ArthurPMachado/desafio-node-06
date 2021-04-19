@@ -1,18 +1,19 @@
-import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository";
-import { CreateUserUseCase } from "../../../users/useCases/createUser/CreateUserUseCase";
-import { ICreateUserDTO } from "../../../users/useCases/createUser/ICreateUserDTO";
-import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMemoryStatementsRepository";
-import { CreateStatementUseCase } from "../createStatement/CreateStatementUseCase";
-import { GetBalanceError } from "./GetBalanceError";
-import { GetBalanceUseCase } from "./GetBalanceUseCase";
+import { InMemoryUsersRepository } from "../../../users/repositories/in-memory/InMemoryUsersRepository"
+import { CreateUserUseCase } from "../../../users/useCases/createUser/CreateUserUseCase"
+import { ICreateUserDTO } from "../../../users/useCases/createUser/ICreateUserDTO"
+import { InMemoryStatementsRepository } from "../../repositories/in-memory/InMemoryStatementsRepository"
+import { InMemoryTransfersRepository } from "../../repositories/in-memory/InMemoryTransfersRepository"
+import { CreateStatementUseCase } from "../createStatement/CreateStatementUseCase"
+import { GetBalanceError } from "./GetBalanceError"
+import { GetBalanceUseCase } from "./GetBalanceUseCase"
 
-let statementsRepositoryInMemory: InMemoryStatementsRepository
-let usersRepositoryInMemory: InMemoryUsersRepository
-let createUserUseCase: CreateUserUseCase
-let createStatementUseCase: CreateStatementUseCase
-let getBalanceUseCase: GetBalanceUseCase
-
-describe("Get Statement Balance Use Case", () => {
+describe("Get Balance Use Case", () => {
+  let transfersRepositoryInMemory: InMemoryTransfersRepository
+  let statementsRepositoryInMemory: InMemoryStatementsRepository
+  let usersRepositoryInMemory: InMemoryUsersRepository
+  let createUserUseCase: CreateUserUseCase
+  let createStatementUseCase: CreateStatementUseCase
+  let getBalanceUseCase: GetBalanceUseCase
 
   enum OperationType {
     DEPOSIT = 'deposit',
@@ -101,7 +102,8 @@ describe("Get Statement Balance Use Case", () => {
   }
 
   beforeEach(() => {
-    statementsRepositoryInMemory = new InMemoryStatementsRepository()
+    transfersRepositoryInMemory = new InMemoryTransfersRepository()
+    statementsRepositoryInMemory = new InMemoryStatementsRepository(transfersRepositoryInMemory)
     usersRepositoryInMemory = new InMemoryUsersRepository()
     createStatementUseCase = new CreateStatementUseCase(
       usersRepositoryInMemory,
@@ -132,4 +134,4 @@ describe("Get Statement Balance Use Case", () => {
       await getBalanceUseCase.execute({ user_id: "not exists" })
     ).rejects.toBeInstanceOf(GetBalanceError)
   })
-});
+})
